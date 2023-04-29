@@ -6,11 +6,17 @@
 #include <vector>
 #include <utility>
 
-double integral(
-  double f(std::vector<double>),
-  const std::vector<std::pair<double, double>>& bounds,
-  int n
+double integrate_prl(
+  double (*f)(double x, double y, double z),
+  double a[3],
+  double b[3],
+  int n[3]
 );
-
+double integrate_seq(
+  double (*f)(double x, double y, double z),
+  double a[3],
+  double b[3],
+  int n[3]
+);
 
 #endif  // MODULES_TASK_2_KOLESNIKOV_D_INTEGRAL_OMP_INTEGRAL_H_

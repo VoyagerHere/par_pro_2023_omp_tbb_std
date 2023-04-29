@@ -1,30 +1,69 @@
 // Copyright 2023 Kolesnikov Denis
+
+#include <omp.h>
+#include <vector>
+#include <utility>
 #include "../../../modules/task_2/kolesnikov_d_integral_omp/integral.h"
 
-double integral(
-  double (*f)(std::vector<double>),
-  const std::vector<std::pair<double, double>>& bounds,
-  int n
-) {
-  double hx = (bounds[0].second - bounds[0].first) / n;
-  double hy = (bounds[1].second - bounds[1].first) / n;
-  double hz = (bounds[2].second - bounds[2].first) / n;
 
-  double integral_res = 0;
-  #pragma omp parallel for reduction(+: integral_res)
-  for (int i = 0; i < n; i++) {
-    for (int j = 0; j < n; j++) {
-      for (int m = 0; m < n; m++) {
-        double x1 = bounds[0].first + i*hx;
-        double x2 = bounds[0].first + (i+1)*hx;
-        double y1 = bounds[1].first + j*hy;
-        double y2 = bounds[1].first + (j+1)*hy;
-        double z1 = bounds[2].first + m*hz;
-        double z2 = bounds[2].first + (m+1)*hz;
-        integral_res +=
-            0.5*(x2-x1)*(y2-y1)*(z2-z1)*(f({x1, y1, z1}) + f({x2, y2, z2}));
-      }
+
+
+
+
+double integrate_seq(
+  double (*f)(double x, double y, double z),
+  double a[3],
+  double b[3],
+  int n[3]
+) {
+    double result = 0.0;
+
+    double h[3];
+    for (int i = 0; i < 3; i++) {
+        h[i] = (b[i] - a[i]) / n[i];
     }
-  }
-  return integral_res;
+
+    for (int i = 0; i < n[0]; i++) {
+        for (int j = 0; j < n[1]; j++) {
+            for (int k = 0; k < n[2]; k++) {
+                double x = a[0] + h[0] * i;
+                double y = a[1] + h[1] * j;
+                double z = a[2] + h[2] * k;
+                double value = f(x + h[0] / 2, y + h[1] / 2, z + h[2] / 2);
+                result += h[0] * h[1] * h[2] * value;
+            }
+        }
+    }
+
+    return result;
+}
+
+
+
+double integrate_prl(
+  double (*f)(double x, double y, double z),
+  double a[3],
+  double b[3],
+  int n[3]
+) {
+    double result = 0.0;
+
+    double h[3];
+    for (int i = 0; i < 3; i++) {
+        h[i] = (b[i] - a[i]) / n[i];
+    }
+
+    #pragma omp parallel for reduction(+: result)
+        for (int i = 0; i < n[0]; i++) {
+            for (int j = 0; j < n[1]; j++) {
+                for (int k = 0; k < n[2]; k++) {
+                    double x = a[0] + h[0] * i;
+                    double y = a[1] + h[1] * j;
+                    double z = a[2] + h[2] * k;
+                    double value = f(x + h[0] / 2, y + h[1] / 2, z + h[2] / 2);
+                    result += h[0] * h[1] * h[2] * value;
+                }
+            }
+        }
+    return result;
 }
