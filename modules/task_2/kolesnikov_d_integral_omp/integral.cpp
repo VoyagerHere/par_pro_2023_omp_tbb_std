@@ -17,11 +17,9 @@ double integrate_seq(
   int n[3]
 ) {
     double result = 0.0;
-
-    
-    double hx = (r[i] - l[i]) / n[i];
-    double hy = (r[i] - l[i]) / n[i];
-    double hz = (r[i] - l[i]) / n[i];
+    double hx = (r[0] - l[0]) / n[0];
+    double hy = (r[1] - l[1]) / n[1];
+    double hz = (r[2] - l[2]) / n[2];
 
     for (int i = 0; i < n[0]; i++) {
       for (int j = 0; j < n[1]; j++) {
@@ -45,11 +43,9 @@ double integrate_prl(
   int n[3]
 ) {
     double result = 0.0;
-
-    
-    double hx = (r[i] - l[i]) / n[i];
-    double hy = (r[i] - l[i]) / n[i];
-    double hz = (r[i] - l[i]) / n[i];
+    double hx = (r[0] - l[0]) / n[0];
+    double hy = (r[1] - l[1]) / n[1];
+    double hz = (r[2] - l[2]) / n[2];
 
     #pragma omp parallel for reduction(+: result)
       for (int i = 0; i < n[0]; i++) {
