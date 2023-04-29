@@ -27,13 +27,13 @@ double f5(double x, double y, double z) {
 }
 
 
-double a[3] = {1, 1, 1};
-double b[3] = {2, 2, 2};
+double l[3] = {1, 1, 1};
+double r[3] = {2, 2, 2};
 int n[3] = {100, 100, 100};
 
 void testIntegral(double (*f)(double x, double y, double z)) {
-    double sequential = integrate_seq(f, a, b, n);
-    double parallel = integrate_prl(f, a, b, n);
+    double sequential = integrate_seq(f, l, r, n);
+    double parallel = integrate_prl(f, l, r, n);
     ASSERT_NEAR(sequential, parallel, epsilon);
 }
 

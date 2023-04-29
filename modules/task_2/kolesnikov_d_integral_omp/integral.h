@@ -8,14 +8,14 @@
 
 double integrate_prl(
   double (*f)(double x, double y, double z),
-  double a[3],
-  double b[3],
+  double l[3],
+  double r[3],
   int n[3]
 );
 double integrate_seq(
   double (*f)(double x, double y, double z),
-  double a[3],
-  double b[3],
+  double l[3],
+  double r[3],
   int n[3]
 );
 
